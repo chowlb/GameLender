@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.chowlb.gamelender.MainActivity" >
+    
+    <item
+        android:id="@+id/action_logout"
+        android:showAsAction="always"
+        android:title="@string/menu_logout_label"/>
+
+    <item
+        android:id="@+id/action_edit_friends"        
+        android:showAsAction="always"
+        android:title="@string/menu_edit_friends_label">
+    </item>
+
+</menu>
