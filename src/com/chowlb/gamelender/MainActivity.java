@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity implements
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if (currentUser == null) {
 			navigateToLogin();
+			
 		}
 		else {
 			Log.i(TAG, currentUser.getUsername());
