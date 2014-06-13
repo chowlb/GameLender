@@ -11,7 +11,8 @@
     <string name="password_hint">Password</string>
     <string name="login_button_label">SIGN IN</string>
     <string name="sign_up_text">Don\'t Have an account? Sign Up!</string>
-    <string name="sign_up_button_label">Sign Up!</string>
+    <string name="sign_up_button_label">SIGN UP</string>
+    <string name="cancel_button_label">CANCEL</string>
     <string name="email_hint">Email</string>
     <string name="signup_error_message">Please make sure you enter a username, password, and email address!</string>
     <string name="singup_error_title">Oops!</string>
@@ -31,5 +32,6 @@
     <string name="title_activity_edit_library">Edit Library</string>
     <string name="search_library_hint">Search for Game</string>
     <string name="content_desc_background_image">Background image</string>
+    <string name="content_desc_button_divider">Button Divider Image</string>
 
 </resources>

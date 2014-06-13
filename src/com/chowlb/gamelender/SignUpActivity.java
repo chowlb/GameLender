@@ -22,6 +22,7 @@ public class SignUpActivity extends Activity {
 	protected EditText mPassword;
 	protected EditText mEmail;
 	protected Button mSignUpButton;
+	protected Button mCancelButton;
 	protected TextView mLogo;
 	
 	@Override
@@ -36,10 +37,21 @@ public class SignUpActivity extends Activity {
 		mPassword = (EditText) findViewById(R.id.passwordField);
 		mEmail = (EditText) findViewById(R.id.emailField);
 		mSignUpButton = (Button) findViewById(R.id.signupButton);
+		mCancelButton = (Button) findViewById(R.id.cancelButton);
 		mLogo = (TextView) findViewById(R.id.logoText);
-		Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/eightbit.ttf");
 		
+		Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/eightbit.ttf");
 		mLogo.setTypeface(typeFace);
+		
+		mCancelButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		
 		
 		
 		mSignUpButton.setOnClickListener(new View.OnClickListener() {
