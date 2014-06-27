@@ -9,13 +9,15 @@
     <string name="title_activity_login">Login</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
+    <string name="forgot_password_text">Forgot your login info?</string>
     <string name="login_button_label">SIGN IN</string>
     <string name="sign_up_text">Don\'t Have an account? Sign Up!</string>
     <string name="sign_up_button_label">SIGN UP</string>
     <string name="cancel_button_label">CANCEL</string>
     <string name="email_hint">Email</string>
     <string name="signup_error_message">Please make sure you enter a username, password, and email address!</string>
-    <string name="singup_error_title">Oops!</string>
+    <string name="signup_error_title">Oops!</string>
+    <string name="signup_password_mismatch">Please make sure the passwords match!</string>
     <string name="login_error_message">Please make sure you enter a username and password!</string>
     <string name="login_error_title">Oops!</string>
     <string name="menu_logout_label">Logout</string>
@@ -33,5 +35,7 @@
     <string name="search_library_hint">Search for Game</string>
     <string name="content_desc_background_image">Background image</string>
     <string name="content_desc_button_divider">Button Divider Image</string>
+    <string name="password_verify_hint">Verify Password</string>
+    <string name="forgotlogin_toast_message">An email will be sent to you with further instructions.</string>
 
 </resources>

@@ -3,7 +3,7 @@
     style="@style/AuthBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.chowlb.gamelender.SignUpActivity" >
+    tools:context="com.chowlb.gamelender.ui.SignUpActivity" >
 
     <ImageView
         android:id="@+id/backgroundImage"
@@ -35,6 +35,12 @@
             android:hint="@string/password_hint"
             android:inputType="textPassword" />
 
+        <EditText
+            android:id="@+id/passwordVerifyField"
+            style="@style/AuthEditText"
+            android:hint="@string/password_verify_hint"
+            android:inputType="textPassword" />
+        
         <EditText
             android:id="@+id/emailField"
             style="@style/AuthEditText"
