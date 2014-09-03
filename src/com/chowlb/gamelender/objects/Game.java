@@ -1,43 +1,63 @@
 package com.chowlb.gamelender.objects;
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
-public class Game {
-	protected int id;
-	protected String title;
-	protected String platform;
+@ParseClassName("Games")
+public class Game extends ParseObject {
 	
-	public Game(int id, String title, String platform) {
-		this.id = id;
-		this.title = title;
-		this.platform = platform;
+	public Game(ParseUser user, String title, String platform) {
+		setUser(user);
+		setTitle(title);
+		setPlatform(platform);
+		setStatus(0);
 	}
 	
-	public Game() {
-		
+	public Game(ParseUser user, TempGameObj game) {
+		setUser(user);
+		setTitle(game.getTitle());
+		setPlatform(game.getPlatform());
+		setStatus(0);
+	}
+	
+	public ParseUser getUser() {
+		return getParseUser("user");
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setUser(ParseUser value) {
+		put("user", value);
 	}
 
 	public String getTitle() {
-		return title;
+		return getParseObject("title").toString();
 	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	
+	public void setTitle(String value) {
+		put("title", value);
 	}
-
+	
 	public String getPlatform() {
-		return platform;
+		return getParseObject("platform").toString();
 	}
+	
+	public void setPlatform(String value) {
+		put("platform", value);
+	}
+	
+	public void setStatus(int value) {
+		put("status", value);
+	}
+	
+	public int getStatus() {
+		return getInt("status");
+	}
+	
+	public static ParseQuery<Game> getQuery() {
+		return ParseQuery.getQuery(Game.class);
+	}
+	
+	
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
-	
-	
 }
+

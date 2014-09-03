@@ -17,9 +17,8 @@ import com.parse.ParseUser;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
-	
+
 	public static final String TAG = MainActivity.class.getSimpleName();
-	
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -41,23 +40,23 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 
 		ParseAnalytics.trackAppOpened(getIntent());
-		
+
 		ParseUser currentUser = ParseUser.getCurrentUser();
 		if (currentUser == null) {
 			navigateToLogin();
-			
-		}
-		else {
+
+		} else {
 			Log.i(TAG, currentUser.getUsername());
 		}
-		
+
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+		mSectionsPagerAdapter = new SectionsPagerAdapter(this,
+				getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -85,7 +84,7 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 	}
-	
+
 	private void navigateToLogin() {
 		Intent intent = new Intent(this, LoginActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -99,7 +98,7 @@ public class MainActivity extends FragmentActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return super.onCreateOptionsMenu(menu);
-		
+
 	}
 
 	@Override
@@ -111,13 +110,16 @@ public class MainActivity extends FragmentActivity implements
 		if (itemId == R.id.action_logout) {
 			ParseUser.logOut();
 			navigateToLogin();
-		}
-		else if(itemId == R.id.action_edit_friends) {
+		} else if (itemId == R.id.action_edit_friends) {
 			Intent intent = new Intent(this, EditFriendsActivity.class);
 			startActivity(intent);
-			
+
+		} else if (itemId == R.id.action_edit_library) {
+			Intent intent = new Intent(this, EditLibraryActivity.class);
+			startActivity(intent);
+
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -138,8 +140,5 @@ public class MainActivity extends FragmentActivity implements
 	public void onTabReselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
 	}
-
-
-
 
 }

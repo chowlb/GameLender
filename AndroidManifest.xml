@@ -12,14 +12,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.chowlb.gamelender.GameLenderApplication"
+        android:name=".GameLenderApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Gamelender" >
         <activity
-            android:name="com.chowlb.gamelender.ui.DispatchActivity"
-            android:noHistory="true">
+            android:name=".ui.DispatchActivity"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,39 +27,58 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.chowlb.gamelender.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
-            android:name="com.chowlb.gamelender.ui.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.chowlb.gamelender.ui.SignUpActivity"
+            android:name=".ui.SignUpActivity"
             android:label="@string/title_activity_sign_up"
-            android:parentActivityName="com.chowlb.gamelender.ui.LoginActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.chowlb.gamelender.ui.EditFriendsActivity"
+            android:name=".ui.EditFriendsActivity"
             android:label="@string/title_activity_edit_friends"
-            android:parentActivityName="com.chowlb.gamelender.ui.MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chowlb.gamelender.MainActivity" />
         </activity>
         <activity
-            android:name="com.chowlb.gamelender.ui.EditLibraryActivity"
+            android:name=".ui.EditLibraryActivity"
             android:label="@string/title_activity_edit_library"
-            android:parentActivityName="com.chowlb.gamelender.ui.MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chowlb.gamelender.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.AddGameActivity"
+            android:label="@string/title_activity_add_game"
+            android:parentActivityName=".ui.EditLibraryActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chowlb.gamelender.EditLibraryActivity" />
+        </activity>
+        <activity
+            android:name=".ui.FriendLibraryActivity"
+            android:label="@string/title_activity_friend_library"
+            android:parentActivityName=".ui.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chowlb.gamelender.ui.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.chowlb.gamelender.ui.BorrowedFragment"
+            android:label="@string/title_activity_borrowed_fragment" >
         </activity>
     </application>
 

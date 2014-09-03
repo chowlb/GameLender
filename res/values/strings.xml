@@ -4,7 +4,8 @@
     <string name="app_name">Game Lender</string>
     <string name="title_section1">Friends</string>
     <string name="title_section2">Library</string>
-    <string name="title_section3">Borrowed</string>
+    <string name="title_section3">Inbox</string>
+    <string name="title_section4">Borrowed</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="username_hint">Username</string>
@@ -26,7 +27,7 @@
     <string name="empty_friends_label">Add Friends to Begin!</string>
     <string name="title_activity_edit_friends">Edit Friends</string>
     <string name="error_title">We\'re Sorry!</string>
-    <string name="empty_borrowing_label">No borrowed games.</string>
+    <string name="empty_inbox_label">No Messages</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main_screen">MainScreenActivity</string>
@@ -37,5 +38,25 @@
     <string name="content_desc_button_divider">Button Divider Image</string>
     <string name="password_verify_hint">Verify Password</string>
     <string name="forgotlogin_toast_message">An email will be sent to you with further instructions.</string>
+    <string name="content_desc_game_checkmark">Game Library Check Mark</string>
+    <string name="library_search_error_string">No games found matching search criteria. Try again.</string>
+    <string name="menu_edit_library">EDIT LIBRARY</string>
+    <string name="title_activity_add_game">AddGameActivity</string>
+    <string name="action_add_game_label">Add Games</string>
+    <string name="title_activity_friend_library">FriendLibraryActivity</string>
+    <string name="sorry_that_game_has_been_lent_out_error">Sorry, that game has been lent out.</string>
+    <string name="sorry_string">Sorry!</string>
+    <string name="filter_friends_library">Filter Friend\'s Library</string>
+    <string name="search_library">Search Library</string>
+    <string name="request_game_menu_string">Request Game</string>
+    <string name="select_a_game_error_title">Please select a game first.</string>
+    <string name="error_sending_message">Error sending message</string>
+    <string name="error_sending_message_title">Message Error</string>
+    <string name="game_request_sent_string">Game request sent!</string>
+    <string name="sorry_that_game_as_been_requested_already_string">Sorry that game as been requested already.</string>
+    <string name="accept_button_string">Accept</string>
+    <string name="decline_button_string">Decline</string>
+    <string name="title_activity_borrowed_fragment">BorrowedFragment</string>
+    <string name="no_borrowed_games">No Borrowed Games</string>
 
 </resources>

@@ -3,19 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.chowlb.gamelender.ui.EditLibraryActivity" >
-
-    <EditText
+    
+       <EditText
         android:id="@+id/librarysearchField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:ems="10"
-        android:hint="@string/search_library_hint" 
+        android:hint="@string/search_library" 
 		android:imeOptions="actionSearch"
 		android:inputType="text"
 		>
-        <requestFocus />
     </EditText>
     
     <ListView

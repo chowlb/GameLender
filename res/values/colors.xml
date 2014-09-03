@@ -4,6 +4,7 @@
     <color name="apptheme_color">#55913e</color>
     <color name="background_green">#366923</color>
     <color name="light_gray">#BBBBBB</color>
+    <color name="medium_gray">#888888</color>
     <color name="dark_green">#1f4510</color>
     <color name="light_green_button">#9bc18d</color>
     <color name="pressed_green_button">#2E64a9</color>

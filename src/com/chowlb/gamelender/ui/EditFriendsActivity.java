@@ -31,146 +31,148 @@ public class EditFriendsActivity extends ListActivity {
 	protected ParseUser mCurrentUser;
 	protected ArrayAdapter<String> adapter;
 	protected EditText mFriendSearch;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
+
 		setContentView(R.layout.activity_edit_friends);
-		
+
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		
+
 		mFriendSearch = (EditText) findViewById(R.id.friendsearchField);
-		
+
 		mFriendSearch.addTextChangedListener(new TextWatcher() {
-            
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-            	if(getListAdapter() != null) {
-	            	if(cs != null) {
-	            		adapter.getFilter().filter(cs);          
-	            	}	
-            	}
-            }
-             
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                    int arg3) {
-                 
-            }
-             
-            @Override
-            public void afterTextChanged(Editable arg0) {                      
-            }
-        });
+
+			@Override
+			public void onTextChanged(CharSequence cs, int arg1, int arg2,
+					int arg3) {
+				// When user changed the Text
+				if (getListAdapter() != null) {
+					if (cs != null) {
+						adapter.getFilter().filter(cs);
+					}
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		mCurrentUser = ParseUser.getCurrentUser();
-		mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
-		
+		mFriendsRelation = mCurrentUser
+				.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+
 		setProgressBarIndeterminateVisibility(true);
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.orderByAscending(ParseConstants.KEY_USERNAME);
-		query.setLimit(10000);
-	
+		
+
 		query.findInBackground(new FindCallback<ParseUser>() {
-			
+
 			@Override
 			public void done(List<ParseUser> users, ParseException e) {
 				setProgressBarIndeterminateVisibility(false);
-				if(e == null) {
-					
+				if (e == null) {
+
 					mUsers = users;
 					String[] usernames = new String[mUsers.size()];
 					int i = 0;
-					for(ParseUser user : mUsers) {
+					for (ParseUser user : mUsers) {
 						usernames[i] = user.getUsername();
 						i++;
 					}
-					
-					adapter = new ArrayAdapter<String>(EditFriendsActivity.this, android.R.layout.simple_list_item_checked, usernames);
+
+					adapter = new ArrayAdapter<String>(
+							EditFriendsActivity.this,
+							android.R.layout.simple_list_item_checked,
+							usernames);
 					setListAdapter(adapter);
-					
+
 					addFriendCheckmarks();
-					
-				}else {
+
+				} else {
 					Log.e(TAG, e.getMessage());
-					AlertDialog.Builder builder = new AlertDialog.Builder(EditFriendsActivity.this);
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							EditFriendsActivity.this);
 					builder.setMessage(e.getMessage())
-						.setTitle(R.string.error_title)
-						.setPositiveButton(android.R.string.ok, null);
-	
+							.setTitle(R.string.error_title)
+							.setPositiveButton(android.R.string.ok, null);
+
 					AlertDialog dialog = builder.create();
 					dialog.show();
 				}
 			}
 		});
 	}
-	
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		
+
 		super.onListItemClick(l, v, position, id);
-	    if(getListView().isItemChecked(position)) {
-	    	//addFriend
-	    	mFriendsRelation.add(mUsers.get(position));
-	    }
-	    else {
-	    	//remove
-	    	mFriendsRelation.remove(mUsers.get(position));
-	    }
-	    
-	    mCurrentUser.saveInBackground(new SaveCallback() {
-			
+		if (getListView().isItemChecked(position)) {
+			// addFriend
+			mFriendsRelation.add(mUsers.get(position));
+		} else {
+			// remove
+			mFriendsRelation.remove(mUsers.get(position));
+		}
+
+		mCurrentUser.saveInBackground(new SaveCallback() {
+
 			@Override
 			public void done(ParseException e) {
-				if(e != null) {
+				if (e != null) {
 					Log.e(TAG, e.getMessage());
 				}
-				
+
 			}
 		});
-		
+
 	}
-	
-	
+
 	private void addFriendCheckmarks() {
 
-		mFriendsRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
+		mFriendsRelation.getQuery().findInBackground(
+				new FindCallback<ParseUser>() {
 
-			@Override
-			public void done(List<ParseUser> friends, ParseException e) {
-				if(e == null) {
-					//list returned - look for match
-					for(int i = 0; i < mUsers.size(); i++) {
-						ParseUser user = mUsers.get(i);
-						
-						for(ParseUser friend : friends) {
-							if(friend.getObjectId().equals(user.getObjectId())) {
-								getListView().setItemChecked(i, true);
+					@Override
+					public void done(List<ParseUser> friends, ParseException e) {
+						if (e == null) {
+							// list returned - look for match
+							for (int i = 0; i < mUsers.size(); i++) {
+								ParseUser user = mUsers.get(i);
+
+								for (ParseUser friend : friends) {
+									if (friend.getObjectId().equals(
+											user.getObjectId())) {
+										getListView().setItemChecked(i, true);
+									}
+								}
+
 							}
+						} else {
+							Log.e(TAG, e.getMessage());
 						}
-						
+
 					}
-				}else {
-					Log.e(TAG, e.getMessage());
-				}
-				
-			}
-		
-		});
-		
+
+				});
+
 	}
-
-
-	
 
 }

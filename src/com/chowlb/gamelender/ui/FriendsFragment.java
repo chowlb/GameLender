@@ -1,6 +1,5 @@
 package com.chowlb.gamelender.ui;
 
-
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -12,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.chowlb.gamelender.R;
@@ -22,75 +22,96 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
-public class FriendsFragment extends ListFragment{
-	
+public class FriendsFragment extends ListFragment {
+
 	public static final String TAG = FriendsFragment.class.getSimpleName();
 	protected List<ParseUser> mFriends;
 	protected ParseRelation<ParseUser> mFriendsRelation;
 	protected ParseUser mCurrentUser;
 	protected TextView mAddFriends;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
-		
+
+		View rootView = inflater.inflate(R.layout.fragment_friends, container,
+				false);
+
 		mAddFriends = (TextView) rootView.findViewById(android.R.id.empty);
 		mAddFriends.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getListView().getContext(), EditFriendsActivity.class);
+				Intent intent = new Intent(getListView().getContext(),
+						EditFriendsActivity.class);
 				startActivity(intent);
 			}
 		});
-		
+
 		return rootView;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		mCurrentUser = ParseUser.getCurrentUser();
-		mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
-		
+		mFriendsRelation = mCurrentUser
+				.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+
 		getActivity().setProgressBarIndeterminateVisibility(true);
-		
-		ParseQuery<ParseUser> query =  mFriendsRelation.getQuery();
-	    query.addAscendingOrder(ParseConstants.KEY_USERNAME);
-				
+
+		ParseQuery<ParseUser> query = mFriendsRelation.getQuery();
+		query.addAscendingOrder(ParseConstants.KEY_USERNAME);
+
 		query.findInBackground(new FindCallback<ParseUser>() {
 
 			@Override
 			public void done(List<ParseUser> friends, ParseException e) {
 				getActivity().setProgressBarIndeterminateVisibility(false);
-				if(e == null) {
+				if (e == null) {
 					mFriends = friends;
 					String[] usernames = new String[mFriends.size()];
 					int i = 0;
-					for(ParseUser user : mFriends) {
+					for (ParseUser user : mFriends) {
 						usernames[i] = user.getUsername();
 						i++;
 					}
-					
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(getListView().getContext(), android.R.layout.simple_list_item_1, usernames);
+
+					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+							getListView().getContext(),
+							android.R.layout.simple_list_item_1, usernames);
 					setListAdapter(adapter);
-				}else {
+				} else {
 					Log.e(TAG, e.getMessage());
-					AlertDialog.Builder builder = new AlertDialog.Builder(getListView().getContext());
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getListView().getContext());
 					builder.setMessage(e.getMessage())
-						.setTitle(R.string.error_title)
-						.setPositiveButton(android.R.string.ok, null);
-	
+							.setTitle(R.string.error_title)
+							.setPositiveButton(android.R.string.ok, null);
+
 					AlertDialog dialog = builder.create();
 					dialog.show();
 				}
-				
+
 			}
-		
+
 		});
-		
+
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+
+		super.onListItemClick(l, v, position, id);
+		Log.e("chowlb", "Clicked list item position: " + position);
+
+		ParseUser friend = mFriends.get(position);
+
+		Intent i = new Intent(getListView().getContext(),
+				FriendLibraryActivity.class);
+		i.putExtra("USEROBJECTID", friend.getObjectId());
+		startActivity(i);
+
 	}
 }

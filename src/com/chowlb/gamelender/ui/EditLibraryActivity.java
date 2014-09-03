@@ -1,61 +1,116 @@
 package com.chowlb.gamelender.ui;
 
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import android.app.ListActivity;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.chowlb.gamelender.R;
-import com.chowlb.gamelender.objects.Game;
-import com.chowlb.gamelender.utils.ParseConstants;
+import com.chowlb.gamelender.objects.TempGameObj;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class EditLibraryActivity extends ListActivity {
 
 	protected EditText mLibrarySearch;
 	protected ArrayAdapter<String> adapter;
-	protected List<Game> mGamesList;
-	
+	protected List<TempGameObj> mGamesList = new ArrayList<TempGameObj>();
+	protected List<ParseObject> mParseGameList = new ArrayList<ParseObject>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
+
 		setContentView(R.layout.activity_edit_library);
 
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		
 		mLibrarySearch = (EditText) findViewById(R.id.librarysearchField);
-		mLibrarySearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-		    @Override
-		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-		            Log.e("chowlb", "Search started: " + mLibrarySearch.getText().toString());
-		        	performSearch();
-		            return true;
-		        }
-		        return false;
-		    }
+		mLibrarySearch.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				adapter.getFilter().filter(s.toString());
+			}
+		});
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		ParseUser mCurrentUser = ParseUser.getCurrentUser();
+		setProgressBarIndeterminateVisibility(true);
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Game");
+		query.addAscendingOrder("title");
+		query.whereEqualTo("owner", mCurrentUser.getObjectId());
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> games, ParseException e) {
+				setProgressBarIndeterminateVisibility(false);
+				if (e == null) {
+					String[] gameNames = new String[games.size()];
+					int i = 0;
+					mParseGameList = games;
+					for (ParseObject game : games) {
+						// TempGameObj tempGame = new TempGameObj();
+						// tempGame.setPlatform(game.getString("platform"));
+						// tempGame.setTitle(game.getString("title"));
+						// mGamesList.add(tempGame);
+
+						gameNames[i] = game.getString("title") + " - "
+								+ game.getString("platform");
+						i++;
+					}
+
+					Log.e("chowlb", "GameList: " + mParseGameList.size()
+							+ " vs. SearchLIst: " + gameNames.length);
+
+					adapter = new ArrayAdapter<String>(
+							EditLibraryActivity.this,
+							android.R.layout.simple_list_item_checked,
+							gameNames);
+					setListAdapter(adapter);
+
+					addGameCheckMarks();
+				} else {
+					Log.e("Chowlb", e.getMessage());
+				}
+
+			}
+
 		});
 	}
 
@@ -73,76 +128,77 @@ public class EditLibraryActivity extends ListActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.action_add_game) {
+			Intent intent = new Intent(this, AddGameActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-	protected void performSearch() {
-		String searchText = mLibrarySearch.getText().toString();
-		Log.e("chowlb", "PeformSearch called: " + searchText);
-		GetGamesListAsync getBlogPostsTask = new GetGamesListAsync();
-		getBlogPostsTask.execute(searchText);
-	}
-	
-	public void handleGamesList() {
-		
-		String[] gameNames = new String[mGamesList.size()];
-		int i = 0;
-		for(Game game : mGamesList) {
-			gameNames[i] = game.getTitle();
-			i++;
-		}
-		adapter = new ArrayAdapter<String>(EditLibraryActivity.this, android.R.layout.simple_list_item_checked, gameNames);
-		setListAdapter(adapter);
-	}
-	
-	
-	private class GetGamesListAsync extends AsyncTask<String, Void, List<Game>>{
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
 
-		@Override
-		protected List<Game> doInBackground(String... arg0) {
-			String xmlSource = ParseConstants.URL_GET_GAME_LIST + arg0[0];
-			List<Game> gameList = new ArrayList<Game>();
-			
-			try {
-				URL url = new URL(xmlSource);
-				URLConnection con = url.openConnection();
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document doc = builder.parse(con.getInputStream());
-				
-				NodeList nodes = doc.getElementsByTagName("Game");
-	            for (int i = 0; i < nodes.getLength(); i++) {
-	            	
-	                Element element = (Element) nodes.item(i);
-	                NodeList id = element.getElementsByTagName("id");
-	                Element elementId = (Element) id.item(0);
-	                NodeList title = element.getElementsByTagName("GameTitle");
-	                Element elementTitle = (Element) title.item(0);
-	                NodeList platform = element.getElementsByTagName("Platform");
-	                Element elementPlatform = (Element) platform.item(0);
-	                Game game = new Game(Integer.valueOf(elementId.getTextContent()), elementTitle.getTextContent(), elementPlatform.getTextContent());
-	                gameList.add(game);
-	            }
-	            
-				
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-			return gameList;
+		super.onListItemClick(l, v, position, id);
+		if (getListView().isItemChecked(position)) {
+			ParseObject game = new ParseObject("Game");
+			game = mParseGameList.get(position);
+			game.saveInBackground();
+
+		} else {
+
+			// remove
+			ParseObject tempGame = mParseGameList.get(position);
+			tempGame.deleteInBackground();
+			// ParseQuery<ParseObject> query = ParseQuery.getQuery("Game");
+			// query.whereEqualTo("owner", ParseUser.getCurrentUser()
+			// .getObjectId());
+			// query.whereEqualTo("title", tempGame.getTitle());
+			// query.whereEqualTo("platform", tempGame.getTitle());
+			// query.findInBackground(new FindCallback<ParseObject>() {
+			//
+			// @Override
+			// public void done(List<ParseObject> games, ParseException e) {
+			// if (e == null) {
+			// for (ParseObject listedGame : games) {
+			// listedGame.deleteInBackground();
+			// }
+			// } else {
+			//
+			// Log.e("chowlb", e.getMessage());
+			//
+			// }
+			//
+			// }
+			// });
 		}
-		
-		
-		@Override
-		protected void onPostExecute(List<Game> result) {
-			mGamesList = result;
-			handleGamesList();
-		}
+
 	}
-	
+
+	private void addGameCheckMarks() {
+
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Game");
+		query.whereEqualTo("owner", ParseUser.getCurrentUser().getObjectId());
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> games, ParseException e) {
+				if (e == null) {
+					// list returned - look for match
+					Log.e("chowlb", "GameList: " + mParseGameList.size()
+							+ " vs. SearchLIst: " + games.size());
+					for (int i = 0; i < mParseGameList.size(); i++) {
+
+						getListView().setItemChecked(i, true);
+
+					}
+				} else {
+					Log.e("chowlb", e.getMessage());
+				}
+
+			}
+
+		});
+
+	}
 
 }
